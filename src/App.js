@@ -13,15 +13,27 @@ import leaves2Url from "./resources/leaves2.png";
 import "./materials/layerMaterial";
 
 function Scene({ dof }) {
+  //Give it the actual image's size along with the "cover" argument and it will fill the screen.
+  //Note: this "cover" doesn't zoom, but rather, stretch + zoom. This is because the size will also be set to the size of the plane mesh.
+  //Value lower than actual image = vertical stretch, vice versa = horizontal stretch.
   const scaleN = useAspect("cover", 1600, 1000, 0.21);
   const scaleW = useAspect("cover", 2200, 1000, 0.21);
+  //Just loading a bunch of textures
   const textures = useTextureLoader([bgUrl, starsUrl, groundUrl, bearUrl, leaves1Url, leaves2Url]);
+  //Subject is used to reference the bear
   const subject = useRef();
+  //Group is used to reference everything else in the layer.
   const group = useRef();
+  //Not sure yet what this does
   const layersRef = useRef([]);
+  //See the usage of these vectors in the useFrame function below.
   const [movementVector] = useState(() => new THREE.Vector3());
   const [tempVector] = useState(() => new THREE.Vector3());
   const [focusVector] = useState(() => new THREE.Vector3());
+
+  //Each layer maps to each drawing in the scene (see the files in the resources folder).
+  //The parameters are fed to the layerMaterial of the plane.
+  //Each of the params are explained in the return statement.
   const layers = [
     { texture: textures[0], z: 0, factor: 0.005, scale: scaleW },
     { texture: textures[1], z: 10, factor: 0.005, scale: scaleW },
@@ -53,7 +65,11 @@ function Scene({ dof }) {
     group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.mouse.y / 10, 0.2);
     group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, -state.mouse.x / 2, 0.2);
     /**
-     * Apparently not doing anything?!
+     * Leaves' wiggle.
+     * Pass time to the shader.
+     * This looks a bit strange but it's basically passing the time to both layer 4 and 5 at the same time.
+     *
+     * Both layers 4 and 5 are leaves.
      */
     layersRef.current[4].uniforms.time.value = layersRef.current[5].uniforms.time.value += delta;
   }, 1);
@@ -61,6 +77,11 @@ function Scene({ dof }) {
   return (
     <group ref={group}>
       <Fireflies count={10} radius={80} colors={["orange"]} />
+      {/* 
+      z = z-position, how close or far a layer is. Layer 1 (pink background) = closest and Layer 6 = farthest (leaves2).
+      scale = size of the plane, already mentioned above.
+      The rest of the props will be explained within the layerMaterial shader.
+      */}
       {layers.map(({ scale, texture, ref, factor = 0, scaleFactor = 1, wiggle = 0, z }, i) => (
         <Plane scale={scale} args={[1, 1, wiggle ? 10 : 1, wiggle ? 10 : 1]} position-z={z} key={i} ref={ref}>
           <layerMaterial
@@ -91,6 +112,7 @@ const Effects = React.forwardRef((_, ref) => {
 });
 
 export default function App() {
+  //Depth of field reference.
   const dof = useRef();
   return (
     <>
