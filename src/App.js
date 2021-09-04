@@ -99,7 +99,9 @@ function Scene({ dof }) {
   );
 }
 
+//Forward the reference to the children of this component
 const Effects = React.forwardRef((_, ref) => {
+  //Get width and height from renderer using useThree hook
   const {
     viewport: { width, height },
   } = useThree();
@@ -114,6 +116,7 @@ const Effects = React.forwardRef((_, ref) => {
 export default function App() {
   //Depth of field reference.
   const dof = useRef();
+
   return (
     <>
       <Canvas
