@@ -53,7 +53,7 @@ function Scene({ dof }) {
      * the subject variable (the bear) and the value 0.05. The value 0.05 interpolates towards
      * the position of the bear: https://threejs.org/docs/#api/en/math/Vector3.lerp
      */
-    dof.current.target = focusVector.lerp(subject.current.position, 0.05);
+    // dof.current.target = focusVector.lerp(subject.current.position, 0.05);
     /**
      * Extra movement in the y axis that is an interpolation of the attenuated mouse x and alpha of 0.2.
      */
@@ -61,9 +61,9 @@ function Scene({ dof }) {
     /**
      * How much each of the group changes/move around when mouse moves.
      */
-    group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, state.mouse.x * 20, 0.2);
-    group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.mouse.y / 10, 0.2);
-    group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, -state.mouse.x / 2, 0.2);
+    // group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, state.mouse.x * 20, 0.2);
+    // group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.mouse.y / 10, 0.2);
+    // group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, -state.mouse.x / 2, 0.2);
     /**
      * Leaves' wiggle.
      * Pass time to the shader.
@@ -71,7 +71,7 @@ function Scene({ dof }) {
      *
      * Both layers 4 and 5 are leaves.
      */
-    layersRef.current[4].uniforms.time.value = layersRef.current[5].uniforms.time.value += delta;
+    // layersRef.current[4].uniforms.time.value = layersRef.current[5].uniforms.time.value += delta;
   }, 1);
 
   return (
@@ -82,7 +82,7 @@ function Scene({ dof }) {
       scale = size of the plane, already mentioned above.
       The rest of the props will be explained within the layerMaterial shader.
       */}
-      {layers.map(({ scale, texture, ref, factor = 0, scaleFactor = 1, wiggle = 0, z }, i) => (
+      {/* {layers.map(({ scale, texture, ref, factor = 0, scaleFactor = 1, wiggle = 0, z }, i) => (
         <Plane scale={scale} args={[1, 1, wiggle ? 10 : 1, wiggle ? 10 : 1]} position-z={z} key={i} ref={ref}>
           <layerMaterial
             attach="material"
@@ -94,7 +94,7 @@ function Scene({ dof }) {
             scaleFactor={scaleFactor}
           />
         </Plane>
-      ))}
+      ))} */}
     </group>
   );
 }
@@ -122,7 +122,7 @@ export default function App() {
       <Canvas
         orthographic
         gl={{ powerPreference: "high-performance", antialias: false, stencil: false, alpha: false, depth: false }}
-        camera={{ zoom: 5, position: [0, 0, 200], far: 300, near: 0 }}>
+        camera={{ zoom: 1, position: [0, 0, 200], far: 300, near: 0 }}>
         <Suspense fallback={null}>
           <Scene dof={dof} />
         </Suspense>

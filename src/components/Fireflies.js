@@ -50,14 +50,24 @@ export default function Fireflies({ count, colors, radius = 10 }) {
       const startingPos = new THREE.Vector3(Math.sin(0) * radius * r(), Math.cos(0) * radius * r(), 0);
       //For each of starting positions, attach thirty more points in a circular path.
       const dots = 30;
-      const points = new Array(dots).fill().map((_, index) => {
-        //Evenly distribute the 30 dots in a circle (half circle would be just Math.PI)
-        const angle = (index / dots) * Math.PI * 2;
-        //Start each circle from the starting position
-        return startingPos
-          .add(new THREE.Vector3(Math.sin(angle) * radius * r(), Math.cos(angle) * radius * r(), 0))
-          .clone();
-      });
+
+      //Refactored from the commented code below for readability
+      const points = [];
+      for (let angle = 0; angle < (Math.PI * 2); angle += (Math.PI * 2) / 30){
+        const xAngle = Math.sin(angle) * radius * r();
+        const yAngle = Math.cos(angle) * radius * r();
+        const zAngle = 0;
+        points.push(startingPos.add(new THREE.Vector3(xAngle, yAngle, zAngle)).clone());
+      }
+      // const points = new Array(dots).fill().map((_, index) => {
+      //   //Evenly distribute the 30 dots in a circle (half circle would be just Math.PI)
+      //   const angle = (index / dots) * Math.PI * 2;
+      //   //Start each subsequent dots after the prev one.
+      //   return startingPos
+      //     .add(new THREE.Vector3(Math.sin(angle) * radius * r(), Math.cos(angle) * radius * r(), 0))
+      //     .clone();
+      // });
+
       //Draw spline between the 30 points.
       //getPoints() specifies how many points from the interpolated splines you want.
       const curve = new THREE.CatmullRomCurve3(points).getPoints(100);
