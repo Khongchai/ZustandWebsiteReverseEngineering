@@ -76,7 +76,8 @@ function Scene({ dof }) {
 
   return (
     <group ref={group}>
-      <Fireflies count={10} radius={80} colors={["orange"]} />
+      <Fireflies count={10} radius={80} colors={["green"]} />
+
       {/* 
       z = z-position, how close or far a layer is. Layer 1 (pink background) = closest and Layer 6 = farthest (leaves2).
       scale = size of the plane, already mentioned above.

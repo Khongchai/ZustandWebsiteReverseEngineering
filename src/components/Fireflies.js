@@ -1,11 +1,5 @@
 import * as THREE from "three";
-import React, { useRef, useMemo } from "react";
-import { extend, useFrame } from "react-three-fiber";
-import * as meshline from "threejs-meshline";
-
-//By extending a third-party library, you will be
-//able to reference it in r3f declaratively.
-extend(meshline);
+import React, { useRef, useMemo, useEffect } from "react";
 
 const r = () => Math.max(0.2, Math.random());
 
@@ -15,26 +9,13 @@ const r = () => Math.max(0.2, Math.random());
  * @returns
  */
 const Fatline = ({ curve, width, color }) => {
-  const material = useRef();
+
+  const lineGeometry = new THREE.BufferGeometry().setFromPoints(curve);
+
   return (
-    <mesh>
-      {/* @ts-ignore */}
-      <meshLine attach="geometry" vertices={curve} />
-      <meshLineMaterial
-        //Attach material means use this material
-        attach="material"
-        //useRef is so that we can reference the dashOffset above in the useFrame hook.
-        ref={material}
-        transparent
-        lineWidth={width}
-        color={color}
-        //The length and spaces between dashes
-        dashArray={0.1}
-        //How much of a dash would you like to see? ratio of 0 = straight line
-        //ratio of 1 = invisible
-        dashRatio={0}
-      />
-    </mesh>
+      <line geometry={lineGeometry}>
+        <lineBasicMaterial attach="material" color={"#9c88ff"} lineWidth={10} linecap={"round"}/>
+      </line>
   );
 };
 
@@ -78,6 +59,7 @@ export default function Fireflies({ count, colors, radius = 10 }) {
       ))}
     </group>
   );
+
 }
 
 //force push
